@@ -34,10 +34,10 @@ const Login = () => {
                         <div className='flex flex-col ml-24'>
                             <h2 className='capitalize font-signature text-blue-600 text-2xl font-medium italic mb-10'>BLOG LAB</h2>
                             <label>Email</label>
-                            <input type='email' placeholder='Email' className='bg-neutral-300 rounded-md p-2 text-white mt-2 mb-2' value={email}
+                            <input type='email' placeholder='Email' className='bg-neutral-300 rounded-md p-2 text-black mt-2 mb-2' value={email}
                             onChange={(e)=>setEmail(e.target.value)}/>
                             <label>Password</label>
-                            <input type='password' placeholder='Password' className='bg-neutral-300 rounded-md p-2 text-white mt-2 mb-4' value={password}
+                            <input type='password' placeholder='Password' className='bg-neutral-300 rounded-md p-2 text-black mt-2 mb-4' value={password}
                             onChange={(e)=>setPassword(e.target.value)}/>
                             <button type='submit' className='bg-blue-600 text-white font-semibold p-2 rounded-md mb-2'>
                                 Login
