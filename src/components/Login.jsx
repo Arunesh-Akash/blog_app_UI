@@ -5,15 +5,23 @@ import { ImFacebook2 } from "react-icons/im";
 import { FaLinkedin } from "react-icons/fa";
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { object, string } from 'yup';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate=useNavigate();
+    const [error, setError] = useState({});
+
+    let userSchema = object({
+        email: string().email('Email not valid').required('Email is required!'),
+        password: string().required('Password is required!')
+    });
 
     async function handleSubmit(e){
         e.preventDefault();
         try{
+            await userSchema.validate({email,password},{abortEarly:false})
             const response=await axios.post('http://localhost:3005/login', {email, password });
             console.log(response.data);
             localStorage.setItem('token',response.data.token);
@@ -22,6 +30,13 @@ const Login = () => {
             navigate('/home')
         }
         catch(error){
+            if(error.name==='ValidationError'){
+                const validationErrors={}
+                error.inner.forEach(err=>(
+                    validationErrors[err.path]=err.message
+                ))
+                setError(validationErrors);
+            }
             console.log(error);
         }
     }
@@ -36,10 +51,12 @@ const Login = () => {
                             <label>Email</label>
                             <input type='email' placeholder='Email' className='bg-neutral-300 rounded-md p-2 text-black mt-2 mb-2' value={email}
                             onChange={(e)=>setEmail(e.target.value)}/>
+                            {error.email && <p className='text-red-600 text-sm'>{error.email}</p>}
                             <label>Password</label>
-                            <input type='password' placeholder='Password' className='bg-neutral-300 rounded-md p-2 text-black mt-2 mb-4' value={password}
+                            <input type='password' placeholder='Password' className='bg-neutral-300 rounded-md p-2 text-black mt-2 mb-2' value={password}
                             onChange={(e)=>setPassword(e.target.value)}/>
-                            <button type='submit' className='bg-blue-600 text-white font-semibold p-2 rounded-md mb-2'>
+                            {error.password && <p className='text-red-600 text-sm'>{error.password}</p>}
+                            <button type='submit' className='bg-blue-600 text-white font-semibold p-2 rounded-md mb-2 mt-4'>
                                 Login
                             </button>
                             <div className='mx-4'>
